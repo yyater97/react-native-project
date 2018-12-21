@@ -13,7 +13,8 @@
     "react-native": "0.57.7",
     "react-native-gesture-handler": "^1.0.10",
     "react-native-maps": "^0.22.1",
-    "react-navigation": "^3.0.8"
+    "react-navigation": "^3.0.8",
+    "react-navigation-fluid-transitions": "^0.2.74"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

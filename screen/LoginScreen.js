@@ -7,8 +7,8 @@ class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      txtAccount: 'text',
-      txtPassword: 'text',
+      txtAccount: 'Nhập tài khoản',
+      txtPassword: 'Nhập mật khẩu',
     };
   }
 
@@ -21,12 +21,16 @@ class LoginScreen extends Component {
       <View style={styles.container}>
         <View style={styles.topContainer}>
           <View style={styles.loginLogoContainer}>
-            <Text style={styles.loginLogo}>Login</Text>
+            <Text style={styles.loginLogo}>Đăng nhập</Text>
           </View>
           <View style={styles.signupLogoContainer}>
             <TouchableOpacity style={styles.signupLogo} onPress={()=>{this.props.navigation.navigate('Signup',null)}}>
-              <Text style={styles.signupText}>Signup</Text>
-              <Text style={styles.arrBtn}>></Text>
+              <Text style={styles.signupText}>Đăng ký</Text>
+              <View style={styles.arrowContainer}>
+                <View style={styles.arrow}>
+                  <Image style={styles.arrowImg} source={require('../img/arrow-point-to-right.png')} resizeMode="contain"/>
+                </View>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -53,14 +57,18 @@ class LoginScreen extends Component {
           </View>
         </View>
         <View style={styles.otherLoginContainer}>
-          <TouchableOpacity style={styles.loginTag}>
-            <Image style={styles.tagIcon} source={require("../img/facebook.png")} resizeMode="contain"></Image>
-            <Text style={styles.tagText}>Đăng nhập bằng facebook</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.loginTag}>
-            <Image style={styles.tagIcon} source={require("../img/google-plus.png")} resizeMode="contain"></Image>
-            <Text style={styles.tagText}>Đăng nhập bằng google</Text>
-          </TouchableOpacity>
+          <View style={styles.loginTagContainer}>
+            <TouchableOpacity style={[styles.loginTag, styles.facebook]}>
+              <Image style={styles.tagIcon} source={require("../img/facebook.png")} resizeMode="contain"></Image>
+              <Text style={styles.tagText}>Đăng nhập bằng facebook</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.loginTagContainer}>
+            <TouchableOpacity style={[styles.loginTag, styles.google]}>
+              <Image style={styles.tagIcon} source={require("../img/google-plus.png")} resizeMode="contain"></Image>
+              <Text style={styles.tagText}>Đăng nhập bằng google</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -78,41 +86,68 @@ const styles = StyleSheet.create({
   },
   loginLogoContainer: {
     flex: 1,
+    marginBottom: 10,
   },
   loginLogo: {
     backgroundColor: '#fca504',
-    width: 100,
+    width: 140,
     borderTopRightRadius: 50,
     borderBottomRightRadius: 50,
-    padding: 5,
-    flexDirection: 'row',
-  },
-  signupText: {
-    fontSize: 25,
-    color: 'white',
+    paddingVertical: 8,
+    fontSize: 21,
     fontWeight: 'bold',
+    flexDirection: 'row',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+    paddingLeft: 15,
   },
   signupLogoContainer: {
     flex: 1,
+    alignItems: 'flex-end',
   },
   signupLogo: {
     backgroundColor: 'yellow',
-    padding: 5,
     borderTopLeftRadius: 50,
     borderBottomLeftRadius: 50,
     flexDirection: 'row',
+    width: 115,
+    position: 'relative',
   },
   signupText: {
-    flex: 1,
-    textAlign: 'right',
-  },
-  arrBtn: {
-    flex: 1,
+    flex: 2,
+    textAlign: 'center',
+    padding: 7,
+    paddingRight: 45,
     fontWeight: 'bold',
-    borderRadius: 50,
+  },
+  arrowContainer: {
+    borderRadius: 40,
     backgroundColor: 'white',
-    width: 10,
-    height: 10,
+    width: 40,
+    height: 40,
+    position: 'absolute',
+    top: -4,
+    right: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  arrow: {
+    padding: 8,
+    width: '90%',
+    height: '90%',
+    backgroundColor: 'white',
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: 'yellow',
+  },
+  arrowImg: {
+    flex: 1,
+    height: undefined,
+    width: undefined,
+    alignSelf: 'stretch',
   },
   formContainer: {
     flex: 3,
@@ -123,8 +158,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    marginBottom: 5,
+    marginBottom: 10,
     marginLeft: 15,
+    fontWeight: 'bold',
   },
   input: {
     paddingLeft: 20,
@@ -144,7 +180,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   loginBtnContainer: {
-    flex: 2,
+    flex: 5,
     justifyContent: 'center',
   },
   loginBtn: {
@@ -153,28 +189,34 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 15,
+    marginHorizontal: 30,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
     shadowRadius: 2,  
     elevation: 5,
-    height: 60,
+    height: 55,
   },
   loginBtnText: {
     fontSize: 22,
     fontWeight: 'bold',
   },
   otherLoginContainer: {
-    flex: 3,
+    flex: 2,
+    marginTop: 10,
     alignItems: 'center',
   },
-  loginTag: {
+  loginTagContainer:{
     flex: 1,
-    width: '65%',
+  },
+  loginTag: {
+    backgroundColor: 'yellow',
+    width: '70%',
     margin: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    height: 55,
+    borderRadius: 50,
   },
   tagIcon: {
     flex: 1,
@@ -182,9 +224,19 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   tagText: {
-    flex: 4,
-    marginLeft: 15,
-  }
+    flex: 3,
+    marginLeft: 10,
+  },
+  facebook: {
+    backgroundColor: '#3b5998',
+    borderWidth: 1,
+    borderColor: '#3b5998',
+  },
+  google: {
+    backgroundColor: '#dd4b39',
+    borderWidth: 1,
+    borderColor: '#dd4b39',
+  },
 });
 
 export default LoginScreen;

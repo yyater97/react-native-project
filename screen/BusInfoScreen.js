@@ -1,49 +1,102 @@
-// import React, { Component } from 'react';
-// import { View, Text } from 'react-native';
+import React, { Component } from 'react';
+import { View, TextInput, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import BusInfoItem from './BusInfoItem';
+import API from '../api/Api';
 
-// class LoginScreen extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//     };
-//   }
+export default class BusInfoScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      flatListData: null,
+    };
 
-//   render() {
-//     return (
-//       <View class={styles.container}>
-//         <View class={styles.imgContainer}>
-//           <Img source={require("../img/")}/>
-//         </View>
-//         <View class={styles.formContainer}>
-//           <View class={styles.formEle}>
-//             <Label style={styles.label}>Tài khoản:</Label>
-//             <TextInput style={styles.txtSearch} onChangeText={(text) => this.setState({txtSearch: text})} value={this.state.txtSearch}/>
-//           </View>
-//           <View class={styles.formEle}>
-//             <Label style={styles.label}>Tài khoản:</Label>
-//             <TextInput style={styles.txtSearch} onChangeText={(text) => this.setState({txtSearch: text})} value={this.state.txtSearch}/>
-//           </View>
-//         </View>
-//         <View class={styles.grpBtnContainer}>
-//           <Text>Quên mật khẩu</Text>
-//           <TouchableOpacity>
-//             <Text>Đăng nhập</Text>
-//           </TouchableOpacity>
-//         </View>
-//         <View class={styles.otherLoginContainer}>
-//           <Text>Đăng nhập bằng hình thức khác</Text>
-//           <TouchOpacity>
-//             <Image source={require("../img/")}/>
-//             <Text>Facebook</Text>
-//           </TouchOpacity>
-//           <TouchOpacity>
-//             <Image source={require("../img/")}/>
-//             <Text>Google</Text>
-//           </TouchOpacity>
-//         </View>
-//       </View>
-//     );
-//   }
-// }
+    API('').then((data)=>{
+      this.setState({flatListData: data.flatData});
+    });
+  }
 
-// export default LoginScreen;
+  static navigationOptions = {
+    header: null
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data = {this.state.flatListData}
+          renderItem = {({item, index})=>{
+              return(
+                  <BusInfoItem
+                      title={item.title} 
+                      poster={`http://image.tmdb.org/t/p/w185/${item.poster_path}`}
+                      overview={item.overview}
+                      gotoDetailScreen={
+                          ()=>{
+                            this.props.navigation.navigate('Detail', {item: item});
+                          }
+                      }
+                  />
+              );
+          }}
+        />
+        <View style={styles.searchBarContainer}>
+          <View style={styles.searchBar}>
+            <TextInput style={styles.txtSearch} onChangeText={(text) => {
+              // API(text).then((data)=>{
+              //   this.setState({flatListData: data.flatData});
+              // });
+            }}/>
+            <TouchableOpacity style={styles.searchBtn}>
+              <Image style={styles.searchIcon} source={require('../img/magnifying-glass.png')} resizeMode="contain"></Image>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  }
+}
+
+var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'white'
+  },
+  searchBarContainer: {
+    backgroundColor: 'blue',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 60,
+  },
+  searchBar: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderColor: 'black',
+    padding: 5,
+  },
+  txtSearch: {
+    flex: 5,
+    backgroundColor: 'green',
+    paddingLeft: 15,
+    borderTopLeftRadius: 50,
+    borderBottomLeftRadius: 50,
+    backgroundColor: '#f1f1f1',
+  },
+  searchBtn: {
+    flex: 1,
+    backgroundColor: 'grey',
+    borderTopRightRadius: 50,
+    borderBottomRightRadius: 50,
+    padding: 10,
+    backgroundColor: '#f1f1f1',
+    borderLeftWidth: 1,
+    borderLeftColor: '#E8E8E8',
+  },
+  searchIcon: {
+    flex: 1,
+    alignSelf: 'stretch',
+    width: undefined,
+    height: undefined,
+  }
+});
