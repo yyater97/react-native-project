@@ -8,22 +8,20 @@ export default class BusInfoItem extends Component{
 
     render(){
         return(
-            <View style={styles.container}>
+            <TouchableOpacity style={styles.container}>
                 <View style={styles.imgContainer}>
-                    <Image style={styles.image} source={{uri:this.props.poster}}/>
+                    <Image style={styles.image} source={{uri:this.props.poster}} resizeMode="contain"/>
                 </View>
                 <View style={styles.txtContainer}>
                     <View style={styles.content}>
-                        <Text style={styles.title} numberOfLines={2}>{this.props.title}</Text>
-                        <Text style={styles.sumary} numberOfLines={7}>{this.props.overview}</Text>
-                    </View>
-                    <View style={styles.btnContainer}>
-                        <TouchableOpacity style={styles.button} onPress={this.props.gotoDetailScreen} >
-                            <Text style={styles.btnText}>More</Text>
-                        </TouchableOpacity>
+                        <Text style={styles.title} numberOfLines={1}>Số xe: 150</Text>
+                        <Text style={styles.sumary} numberOfLines={1}>Bến đầu: Ngã ba Vũng Tàu</Text>
+                        <Text style={styles.sumary} numberOfLines={1}>Bến cuối: Chợ bến Thành</Text>
+                        <Text style={styles.sumary} numberOfLines={1}>Thời gian bắt đầu: 5h30</Text>
+                        <Text style={styles.sumary} numberOfLines={1}>Thời gian kết thúc: 20h30</Text>
                     </View>
                 </View>   
-            </View>
+            </TouchableOpacity>
         );
     }
 }
@@ -32,10 +30,19 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#E8C805',
+        backgroundColor: '#fca504',
         flexDirection: 'row',
-        marginBottom: 10,
-        height: 200
+        margin: 10,
+        marginBottom: 0,
+        padding: 10,
+        paddingHorizontal: 0,
+        height: 150,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,  
+        elevation: 5,
     },
     imgContainer: {
         flex: 2,
@@ -43,43 +50,25 @@ var styles = StyleSheet.create({
         alignItems: 'center'
     },
     image: {
-        width: 130,
-        height: 180,
-        borderRadius: 15,
-        elevation: 15        
+        flex: 1,
+        width: undefined,
+        height: undefined,
+        alignSelf: 'stretch',
     },
     txtContainer: {
         flex: 3,
-        marginVertical: 10,
         marginHorizontal: 10
     },
     content: {
         flex: 5
     },
     title: {
-        fontSize: 18,
-        fontWeight: 'bold'
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 7,
     },
     sumary: {
-        fontSize: 11
+        fontSize: 13,
+        marginBottom: 5,
     },
-    btnContainer: {
-        flex: 1,
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        marginRight: 10
-    },
-    button: {
-        width: 80,
-        height: 40,
-        borderRadius: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#00A119',
-        elevation: 15
-    },
-    btnText: {
-        fontSize: 15,
-        color: '#f1f1f1'
-    }
 });

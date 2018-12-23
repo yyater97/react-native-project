@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ActivityIndicator, View, TextInput, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import BusInfoItem from './BusInfoItem';
 
-export default class BusInfoScreen extends Component {
+export default class BusList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -69,14 +69,6 @@ export default class BusInfoScreen extends Component {
               );
           }}
         />
-        <View style={styles.searchBarContainer}>
-          <View style={styles.searchBar}>
-            <TextInput style={styles.txtSearch} onChangeText={(text) => {this.setState({txtSearch: text})}} value={this.state.txtSearch}/>
-            <TouchableOpacity style={styles.searchBtn} onPress={this.fetchData}>
-              <Image style={styles.searchIcon} source={require('../img/magnifying-glass.png')} resizeMode="contain"></Image>
-            </TouchableOpacity>
-          </View>
-        </View>
       </View>
     );
   }
@@ -88,41 +80,4 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white'
   },
-  searchBarContainer: {
-    backgroundColor: 'blue',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 60,
-  },
-  searchBar: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    borderColor: 'black',
-    padding: 5,
-  },
-  txtSearch: {
-    flex: 5,
-    backgroundColor: 'green',
-    paddingLeft: 15,
-    borderTopLeftRadius: 50,
-    borderBottomLeftRadius: 50,
-    backgroundColor: '#f1f1f1',
-  },
-  searchBtn: {
-    flex: 1,
-    backgroundColor: 'grey',
-    borderTopRightRadius: 50,
-    borderBottomRightRadius: 50,
-    padding: 10,
-    backgroundColor: '#f1f1f1',
-    borderLeftWidth: 1,
-    borderLeftColor: '#E8E8E8',
-  },
-  searchIcon: {
-    flex: 1,
-    alignSelf: 'stretch',
-    width: undefined,
-    height: undefined,
-  }
 });

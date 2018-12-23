@@ -3,7 +3,7 @@ import LoginScreen from '../screen/LoginScreen';
 import SignupScreen from '../screen/SignupScreen';
 import BusInfoScreen from '../screen/BusInfoScreen';
 import {createDrawerNavigator, createAppContainer, createStackNavigator} from 'react-navigation';
-
+import MenuButton from 'react-native';
 
 const transitionConfig = () => {
     return {
@@ -54,12 +54,14 @@ const transitionConfig = () => {
 }
 
 const DrawerNavigator = createDrawerNavigator({
-    Map: {screen: MapScreen},
+    Map: {
+        screen: MapScreen,
+    },
     Login: {screen: LoginScreen},
     Signup: {screen: SignupScreen},
     BusInfo: {screen: BusInfoScreen},
     },{
-        initialRouteName: 'BusInfo',
+        initialRouteName: 'Map',
 });
 
 export const Drawer = createAppContainer(DrawerNavigator);   
