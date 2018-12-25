@@ -8,7 +8,7 @@ export default class BusInfoItem extends Component{
 
     render(){
         return(
-            <TouchableOpacity style={styles.container}>
+            <TouchableOpacity style={styles.container} onPress={this.props.gotoDetailScreen}>
                 <View style={styles.imgContainer}>
                     <Image style={styles.image} source={{uri:this.props.poster}} resizeMode="contain"/>
                 </View>

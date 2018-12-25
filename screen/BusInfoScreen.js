@@ -62,7 +62,7 @@ export default class BusInfoScreen extends Component {
                       overview={item.overview}
                       gotoDetailScreen={
                           ()=>{
-                            this.props.navigation.navigate('Detail', {item: item});
+                            this.props.navigation.navigate('BusInfoDetailScreen', {item: item});
                           }
                       }
                   />

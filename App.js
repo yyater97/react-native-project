@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import {Platform} from 'react-native';
-import {Drawer} from './navigator/Navigator';
+import {RootNav} from './navigator/Navigator';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -25,7 +25,7 @@ export default class App extends Component<Props> {
 
   render() {
     return (
-      <Drawer/>
+      <RootNav/>
     );
   }  
 }

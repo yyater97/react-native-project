@@ -2,8 +2,11 @@ import React, {Component} from 'react';
 import {Animated, Text, StyleSheet, Dimensions, View, TouchableOpacity, Image, TextInput} from 'react-native';
 import MapView from 'react-native-maps';
 import * as Animatable from 'react-native-animatable';
-import BusList from './BusList';
+import {Tab} from '../navigator/Navigator';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 var {height, width} = Dimensions.get('window');
+
+const API_KEY = 'AIzaSyDJvaVGv2F6x6NAVJNliHQba0QYspeJedY';
 
 class MapScreen extends Component {
   
@@ -29,17 +32,20 @@ class MapScreen extends Component {
           title: "Saxophone Club",
           description: "A music pub for saxophone lover."
         },
-      ]
+      ],
+      searchContainerFlexValue: 1,
+      searchContentFlexValue: 4,
     };
   }
 
   static navigationOptions = {
     drawerLabel: 'Map',
+    header: null,
   };
 
   componentWillMount() {
     this.onRegionChange = this.onRegionChange();
-    this.searchContainerFlex = new Animated.Value(1);
+    this.searchContainerFlex = new Animated.Value(this.state.searchContainerFlexValue);
     this.gpsBtnHorizontalPos = new Animated.Value(20);
   }
 
@@ -47,11 +53,32 @@ class MapScreen extends Component {
     this.setState({region});
   }
 
+  getCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+       (position) => {
+         this.setState({
+          region: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          }
+         });
+       },
+       (error) => alert(JSON.stringify(error)),
+       { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 },
+     );
+  }
+
   increaseHeightOfSearchContainer = () => {
     Animated.timing(this.searchContainerFlex,{
       toValue: 10,
       duration: 1000,
     }).start();
+
+    this.setState({
+      searchContainerFlexValue: 10,
+    })
   }
 
   moveUpGPSBtn = () => {
@@ -59,6 +86,44 @@ class MapScreen extends Component {
       toValue: 70,
       duration: 1000,
     }).start();
+  }
+
+  onPressUpArrow = () => {
+    Animated.timing(this.searchContainerFlex,{
+      toValue: 30,
+      duration: 1000,
+    }).start();
+
+    this.setState({
+      searchContentFlexValue: 7,
+      searchContainerFlexValue: 30,
+    })
+  }
+
+  onPressDownArrow = () => {
+    if(this.state.searchContainerFlexValue == 30)
+    {  
+      Animated.timing(this.searchContainerFlex,{
+        toValue: 10,
+        duration: 1000,
+      }).start();
+
+      this.setState({
+        searchContentFlexValue: 4,
+        searchContainerFlexValue: 10,
+      })
+    }else{
+      Animated.timing(this.searchContainerFlex,{
+        toValue: 1,
+        duration: 1000,
+      }).start();
+
+      this.setState({
+        searchContentFlexValue: 4,
+        searchContainerFlexValue: 1,
+        isHiddenBusInfo: false,
+      })
+    }
   }
   
   render() {
@@ -103,30 +168,100 @@ class MapScreen extends Component {
                   })
                 ]}}
             >
-              {/* <MapView.Callout tooltip style={styles.customView}>
-                <TouchableOpacity onPress= {this.increaseHeightOfSearchContainer()}>
-                </TouchableOpacity>
-              </MapView.Callout> */}
             </MapView.Marker>
           ))}
           </MapView>
           <Animated.View style={[styles.gpsBtnContainer, {bottom: this.gpsBtnHorizontalPos}]}>
-            <TouchableOpacity style={styles.gpsBtn}>
+            <TouchableOpacity style={styles.gpsBtn} onPress={this.getCurrentLocation}>
               <Image style={styles.gpsIcon} source={require('../img/gps-fixed-indicator.png')} resizeMode="contain"/>
             </TouchableOpacity>
           </Animated.View>
+          {this.state.isHiddenBusInfo &&
+            <TouchableOpacity style={styles.upArrow} onPress={this.onPressUpArrow}>
+                <Image style={styles.arrowImg} source={require('../img/up-arrow.png')} resizeMode="contain"/>
+            </TouchableOpacity>
+          }
+          {this.state.isHiddenBusInfo &&
+            <TouchableOpacity style={styles.downArrow} onPress={this.onPressDownArrow}>
+                <Image style={styles.arrowImg} source={require('../img/down-arrow.png')} resizeMode="contain"/>
+            </TouchableOpacity>
+          }
         </View>
         <Animated.View style={{flex: this.searchContainerFlex}} >
           <Animatable.View animation="slideInUp" iterationCount={1} style={styles.searchBarContainer}>
-              <View style={styles.searchBar}>
-                <TextInput style={styles.txtSearch} placeholder="Nhập địa điểm muốn tìm" onChangeText={(text) => this.setState({txtSearch: text})} value={this.state.txtSearch}/>
-                <TouchableOpacity style={styles.searchBtn}>
-                  <Image style={styles.searchIcon} source={require('../img/magnifying-glass.png')} resizeMode="contain"></Image>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.searchBar}>
+              <TextInput style={styles.txtSearch} placeholder="Nhập địa điểm muốn tìm" 
+                onChangeText={
+                    (text) => this.setState({txtSearch: text})
+                  }
+                placeholder="Nhập địa điểm muốn tìm"
+                />
+              {/* <GooglePlacesAutocomplete
+                placeholder='Search'
+                minLength={2} // minimum length of text to search
+                autoFocus={false}
+                returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+                listViewDisplayed='auto'    // true/false/undefined
+                fetchDetails={true}
+                renderDescription={row => row.description} // custom description render
+                onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                  console.log(data, details);
+                }}
+                
+                getDefaultValue={() => ''}
+                
+                query={{
+                  // available options: https://developers.google.com/places/web-service/autocomplete
+                  key: API_KEY,
+                  language: 'vn', // language of the results
+                  types: '(cities)' // default: 'geocode'
+                }}
+                
+                styles={{
+                  textInputContainer: {
+                    backgroundColor: 'rgba(0,0,0,0)',
+                    borderTopWidth: 0,
+                    borderBottomWidth:0,
+                  },
+                  description: {
+                    fontWeight: 'bold',
+                  },
+                  textInput: {
+                    marginLeft: 22,
+                    marginRight: 0,
+                    height: 38,
+                    color: '#5d5d5d',
+                    fontSize: 16,
+                  },
+                  predefinedPlacesDescription: {
+                    color: '#1faadb'
+                  }
+                }}
+                
+                currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                currentLocationLabel="Current location"
+                nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                GoogleReverseGeocodingQuery={{
+                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                }}
+                GooglePlacesSearchQuery={{
+                  // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                  rankby: 'distance',
+                  types: 'food'
+                }}
+
+                filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+              /> */}
+              <TouchableOpacity style={styles.searchBtn}>
+                <Image style={styles.searchIcon} source={require('../img/magnifying-glass.png')} resizeMode="contain"></Image>
+              </TouchableOpacity>
+            </View>
           </Animatable.View>
-          <Animated.View style={{flex: 4}}>
-            {this.state.isHiddenBusInfo && <BusList/>}
+          <Animated.View style={{flex: this.state.searchContentFlexValue}}>
+              {this.state.isHiddenBusInfo && <Tab/>}
+            {/* {this.state.isHiddenBusInfo && <BusList navigation = {this.props.navigation}/>}
+            {this.state.isHiddenBusInfo && <Panorama/>} */}
           </Animated.View>
         </Animated.View>
       </View>
@@ -208,6 +343,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
   },
   searchBar: {
     flex: 1,
@@ -245,6 +381,36 @@ const styles = StyleSheet.create({
   marker: {
     backgroundColor: '#fca504', 
   },
+  upArrow: {
+    height: 30,
+    width: 40,
+    position: 'absolute',
+    padding: 5,
+    backgroundColor: 'white',
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    bottom: 0,
+    left: 5,
+    zIndex: 999,
+  },
+  downArrow: {
+    height: 30,
+    width: 40,
+    position: 'absolute',
+    padding: 5,
+    backgroundColor: 'white',
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    bottom: 0,
+    left: 45,
+    zIndex: 999,
+  },
+  arrowImg: {
+    flex: 1,
+    alignSelf: 'stretch',
+    width: undefined,
+    height: undefined,
+  }
 });
 
 export default MapScreen;

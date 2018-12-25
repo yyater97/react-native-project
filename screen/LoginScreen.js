@@ -1,19 +1,49 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, Label, TouchableOpacity, Image, TextInput, Text} from 'react-native';
-import {createStackNavigator} from 'react-navigation'
-import SignupScreen from './SignupScreen';
+import {Alert, StyleSheet, View, Label, TouchableOpacity, Image, TextInput, Text} from 'react-native';
+import { firebaseApp } from './FirebaseConfig';
 
 class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      txtAccount: 'Nhập tài khoản',
-      txtPassword: 'Nhập mật khẩu',
+      Email: '',
+      Password: '',
     };
   }
 
-  static navigationOptions={
-    header: null
+  static navigationOptions = {
+    header: null,
+  }
+
+  onPressLoginBtn = () => {
+
+    firebaseApp.auth().signInWithEmailAndPassword(this.state.Email, this.state.Password)
+      .then(() => {
+        Alert.alert(
+          'Thông báo',
+          'Đăng nhập thành công!',
+          [
+            {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: 'OK', onPress: () => this.props.navigation.navigate('Map',null)},
+          ],
+          { cancelable: false }
+        )
+        this.setState({
+          Email: '',
+          Password: '',
+        })
+      })
+      .catch(function(error){
+        Alert.alert(
+          'Thông báo',
+          'Sai mật khẩu hoặc tài khoản!',
+          [
+            {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          { cancelable: false }
+        )
+      });
   }
 
   render() {
@@ -37,11 +67,19 @@ class LoginScreen extends Component {
         <View style={styles.formContainer}>
           <View style={styles.formEle}>
             <Text style={styles.label}>Tài khoản:</Text>
-            <TextInput style={styles.input} onChangeText={(text) => this.setState({txtAccount: text})} value={this.state.txtAccount}/>
+            <TextInput style={styles.input} onChangeText={
+                (text) => this.setState({Email: text})
+              } 
+              placeholder="Nhập địa chỉ email"/>
           </View>
           <View style={styles.formEle}>
             <Text style={styles.label}>Mật khẩu:</Text>
-            <TextInput style={styles.input} onChangeText={(text) => this.setState({txtPassword: text})} value={this.state.txtPassword}/>
+            <TextInput style={styles.input} onChangeText={
+              (text) => this.setState({Password: text})
+            } 
+            secureTextEntry={true}
+            placeholder="Nhập mật khẩu"
+            />
           </View>
         </View>
         <View style={styles.grpBtnContainer}>
@@ -51,7 +89,7 @@ class LoginScreen extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.loginBtnContainer}>
-            <TouchableOpacity style={styles.loginBtn}>
+            <TouchableOpacity style={styles.loginBtn} onPress={this.onPressLoginBtn}>
               <Text style={styles.loginBtnText}>Đăng nhập</Text>
             </TouchableOpacity>
           </View>

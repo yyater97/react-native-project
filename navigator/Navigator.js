@@ -2,8 +2,13 @@ import MapScreen from '../screen/MapScreen';
 import LoginScreen from '../screen/LoginScreen';
 import SignupScreen from '../screen/SignupScreen';
 import BusInfoScreen from '../screen/BusInfoScreen';
-import {createDrawerNavigator, createAppContainer, createStackNavigator} from 'react-navigation';
-import MenuButton from 'react-native';
+import BusInfoDetail from '../screen/BusInfoDetail';
+import Panorama from '../screen/PanoramaScreen';
+import BusList from '../screen/BusList';
+import BusInfoDetailScreen from '../screen/BusInfoDetailScreen';
+import AddBusInfoScreen from '../screen/AddBusInfoScreen';
+import {createDrawerNavigator, createStackNavigator, createBottomTabNavigator, createAppContainer, createSwitchNavigator} from 'react-navigation';
+
 
 const transitionConfig = () => {
     return {
@@ -53,26 +58,72 @@ const transitionConfig = () => {
     }
 }
 
+const Login_SignupStackNavigator = createStackNavigator({
+    Login: {screen: LoginScreen},
+    Signup: {screen: SignupScreen},
+});
+
+const BusInfoScreen_BusInfoDetailScreenStackNav = createStackNavigator({
+    BusInfoScreen: {screen: BusInfoScreen},
+    BusInfoDetailScreen: {screen: BusInfoDetailScreen},
+});
+
 const DrawerNavigator = createDrawerNavigator({
-    Map: {
-        screen: MapScreen,
-    },
-    Login: {screen: LoginScreen},
-    Signup: {screen: SignupScreen},
-    BusInfo: {screen: BusInfoScreen},
-    },{
-        initialRouteName: 'Map',
-});
-
-export const Drawer = createAppContainer(DrawerNavigator);   
-
-const StackNavigator = createStackNavigator({
     Map: {screen: MapScreen},
-    Login: {screen: LoginScreen},
-    Signup: {screen: SignupScreen},
-    BusInfo: {screen: BusInfoScreen},
-},{
-    transitionConfig,
+    Login: Login_SignupStackNavigator,
+    BusInfo: BusInfoScreen_BusInfoDetailScreenStackNav,
+    AddBusInfoData: {screen: AddBusInfoScreen},
+    },{
+        initialRouteName: 'AddBusInfoData',
 });
 
-export const Stack = createAppContainer(StackNavigator);
+export const RootNav = createAppContainer(DrawerNavigator);
+
+const BusList_BusInfoDetailStackNavigator = createStackNavigator({
+    BusInfoDetail: {
+        screen: BusInfoDetail,
+    },
+    BusList: {screen: BusList},
+},{
+    initialRouteName: 'BusList',
+});
+
+//create tab navigation among buslist screen and panorama screen
+const TabBottomNavigator = createBottomTabNavigator({
+    BusList: {
+        screen: BusList_BusInfoDetailStackNavigator,
+        navigationOptions: {
+            tabBarOptions: { 
+                tabBarIcon: false,
+                activeTintColor: "#fca504", 
+                style:{
+                    height: 30,
+                    justifyContent: 'center',
+                },
+                labelStyle:{
+                    fontWeight: 'bold',
+                    fontSize: 15,
+                },
+            },
+        }
+    },
+    Panorama: {
+        screen:  Panorama,
+        navigationOptions: {
+            tabBarOptions: { 
+                tabBarIcon: false,
+                activeTintColor: "#fca504", 
+                style:{
+                    height: 30,
+                    justifyContent: 'center',
+                },
+                labelStyle:{
+                    fontWeight: 'bold',
+                    fontSize: 15,
+                }
+            },
+        }
+    },
+})
+
+export const Tab = createAppContainer(TabBottomNavigator);

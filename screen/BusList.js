@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, View, TextInput, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import BusInfoItem from './BusInfoItem';
+import BusItem from './BusItem';
+import {Stack} from '../navigator/Navigator';
 
 export default class BusList extends Component {
   constructor(props) {
@@ -13,9 +14,9 @@ export default class BusList extends Component {
     };
   }
 
-  static navigationOptions = {
-    header: null
-  }
+  static navigationOptions= ({navigation})=>({
+    header: null,
+  })
 
   componentWillMount() {
     this.fetchData();
@@ -56,13 +57,13 @@ export default class BusList extends Component {
             this.state.loading ? null : <ActivityIndicator size='large' animating/>}
           renderItem = {({item, index})=>{
               return(
-                  <BusInfoItem
-                      title={item.title} 
-                      poster={`http://image.tmdb.org/t/p/w185/${item.poster_path}`}
-                      overview={item.overview}
-                      gotoDetailScreen={
-                          ()=>{
-                            this.props.navigation.navigate('Detail', {item: item});
+                  <BusItem
+                      routeName={"150"}
+                      startStation={"Ngã ba vũng tàu"}
+                      endStation={"Chợ Bến Thành"}
+                      gotoBusInfoDetail={
+                          () => {
+                            this.props.navigation.navigate('BusInfoDetail', {item: item});
                           }
                       }
                   />

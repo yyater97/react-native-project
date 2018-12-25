@@ -1,20 +1,65 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, Label, TouchableOpacity, Image, TextInput, Text} from 'react-native';
-import {createStackNavigator} from 'react-navigation'
-import LoginScreen from './LoginScreen';
+import {Alert, StyleSheet, View, TouchableOpacity, Image, TextInput, Text} from 'react-native';
+import { firebaseApp } from './FirebaseConfig';
 
 class SignupScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      txtAccount: 'Nhập tài khoản',
-      txtPassword: 'Nhập mật khẩu',
+      Email: '',
+      Password: '',
+      RePassword: '',
+      PhoneNumber: '',
     };
   }
 
   static navigationOptions={
     header: null
   }
+
+  createAccount = () => {
+    console.log('firebase: '+firebaseApp);
+    if(this.state.RePassword == this.state.Password){
+      firebaseApp.auth().createUserWithEmailAndPassword(this.state.Email, this.state.Password)
+      .then(() => {
+        Alert.alert(
+          'Thông báo',
+          'Đăng ký thành công!'+this.state.Email,
+          [
+            {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: 'OK', onPress: () => this.props.navigation.navigate('Login',null)},
+          ],
+          { cancelable: false }
+        )
+        this.setState({
+          Email: '',
+          Password: '',
+        })
+      })
+      .catch(function(error){
+        Alert.alert(
+          'Thông báo',
+          'Đăng ký thất bại!',
+          [
+            {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          { cancelable: false }
+        )
+      });
+    }else{
+      Alert.alert(
+        'Thông báo',
+        'Xác nhận mật khẩu không đúng!',
+        [
+          {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ],
+        { cancelable: false }
+      )
+    }
+  }
+
 
   render() {
     return (
@@ -37,24 +82,38 @@ class SignupScreen extends Component {
         <View style={styles.formContainer}>
           <View style={styles.formEle}>
             <Text style={styles.label}>Tài khoản:</Text>
-            <TextInput style={styles.input} onChangeText={(text) => this.setState({txtAccount: text})} value={this.state.txtAccount}/>
+            <TextInput style={styles.input} onChangeText={
+                (text) => this.setState({Email: text})
+              } 
+              placeholder="Nhập địa chỉ email"/>
           </View>
           <View style={styles.formEle}>
             <Text style={styles.label}>Mật khẩu:</Text>
-            <TextInput style={styles.input} onChangeText={(text) => this.setState({txtPassword: text})} value={this.state.txtPassword}/>
+            <TextInput style={styles.input} onChangeText={
+                (text) => this.setState({Password: text})
+              }
+              secureTextEntry={true}
+              placeholder="Nhập mật khẩu"/>
           </View>
           <View style={styles.formEle}>
             <Text style={styles.label}>Xác nhận mật khẩu:</Text>
-            <TextInput style={styles.input} onChangeText={(text) => this.setState({txtPassword: text})} value={this.state.txtPassword}/>
+            <TextInput style={styles.input} onChangeText={
+                (text) => this.setState({RePassword: text})
+              }
+              secureTextEntry={true}
+              placeholder="Nhập lại mật khẩu"/>
           </View>
           <View style={styles.formEle}>
             <Text style={styles.label}>Số điện thoại:</Text>
-            <TextInput style={styles.input} onChangeText={(text) => this.setState({txtPassword: text})} value={this.state.txtPassword}/>
+            <TextInput style={styles.input} onChangeText={
+                (text) => this.setState({PhoneNumber: text})
+              }
+              placeholder="Nhập số điện thoại"/>
           </View>
         </View>
         <View style={styles.grpBtnContainer}>
           <View style={styles.loginBtnContainer}>
-            <TouchableOpacity style={styles.loginBtn}>
+            <TouchableOpacity style={styles.loginBtn} onPress={this.createAccount}>
               <Text style={styles.loginBtnText}>Đăng ký</Text>
             </TouchableOpacity>
           </View>
