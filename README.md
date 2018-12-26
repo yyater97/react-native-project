@@ -55,7 +55,7 @@
 
 - Language : Javascript
 
-- FrameWork : React Native 0.75.3
+- FrameWork : React Native 0.57.7 - NodeJS 6.5.0
 
 - Database: Firebase - https://console.firebase.google.com/u/0/project/busmap/database/busmap/data
 
@@ -72,7 +72,7 @@
 
 Trần Hưng Quang - 15520693@gm.uit.edu.vn
 
-Phạm Ngọc Quân - 15520780@gm.uit.edu.vn
+Phạm Ngọc Quân - 15520680@gm.uit.edu.vn
 
 Dương Văn Thanh - 15520801@gm.uit.edu.vn
 
