@@ -5,6 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import {Tab} from '../navigator/Navigator';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 var {height, width} = Dimensions.get('window');
+import { firebaseApp } from './FirebaseConfig';
 
 const API_KEY = 'AIzaSyDJvaVGv2F6x6NAVJNliHQba0QYspeJedY';
 
@@ -21,18 +22,8 @@ class MapScreen extends Component {
         latitudeDelta: 0.005,
         longitudeDelta: 0.005,
       },
-      markers:[
-        {
-          latlng:{latitude: 10.8830802, longitude: 106.7808475},
-          title: "Victory Nonument",
-          description: "A large military monument in Bangkok, Thailand."
-        },
-        {
-          latlng:{latitude: 10.763681, longitude: 106.538125},
-          title: "Saxophone Club",
-          description: "A music pub for saxophone lover."
-        },
-      ],
+      markers:[],
+      dataRoute: '',
       searchContainerFlexValue: 1,
       searchContentFlexValue: 4,
     };
@@ -47,10 +38,28 @@ class MapScreen extends Component {
     this.onRegionChange = this.onRegionChange();
     this.searchContainerFlex = new Animated.Value(this.state.searchContainerFlexValue);
     this.gpsBtnHorizontalPos = new Animated.Value(20);
+    this.itemRef = firebaseApp.database();
+    this.getMarker();
   }
 
   onRegionChange(region){
     this.setState({region});
+  }
+
+  getMarker = () => {
+      this.itemRef.ref('Marker').once('value').then((snapshot) => {
+      console.log('snap: '+snapshot.val());
+      var items = [];
+      snapshot.forEach((child) => {
+        items.push({
+            latlng:{latitude: child.val().latitude, longitude: child.val().longitude},
+            title: child.val().name,
+            description: child.val().detail,
+            routes: child.val().routes,
+          });
+        });
+      this.setState({ markers: items});
+    });
   }
 
   getCurrentLocation = () => {
@@ -125,6 +134,13 @@ class MapScreen extends Component {
       })
     }
   }
+
+  showRoutes = (routes) => {
+    this.setState({
+      dataRoute: routes,
+    });
+    this.props.navigation.navigate('BusList', {route: this.dataRoute});
+  }
   
   render() {
     return (
@@ -159,10 +175,12 @@ class MapScreen extends Component {
               coordinate={marker.latlng}
               title={marker.title}
               description={marker.description}
+              routes={marker.routes}
               image={require('../img/location.png')}
               onPress={(e)=>{
                 [this.increaseHeightOfSearchContainer(),
                   this.moveUpGPSBtn(),
+                  this.showRoutes(marker.routes),
                   this.setState({
                     isHiddenBusInfo: true,
                   })
@@ -259,7 +277,7 @@ class MapScreen extends Component {
             </View>
           </Animatable.View>
           <Animated.View style={{flex: this.state.searchContentFlexValue}}>
-              {this.state.isHiddenBusInfo && <Tab/>}
+              {this.state.isHiddenBusInfo && <Tab screenProps={this.state.dataRoute}/>}
             {/* {this.state.isHiddenBusInfo && <BusList navigation = {this.props.navigation}/>}
             {this.state.isHiddenBusInfo && <Panorama/>} */}
           </Animated.View>

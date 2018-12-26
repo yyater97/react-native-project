@@ -14,11 +14,11 @@ export default class BusInfoItem extends Component{
                 </View>
                 <View style={styles.txtContainer}>
                     <View style={styles.content}>
-                        <Text style={styles.title} numberOfLines={1}>Số xe: 150</Text>
-                        <Text style={styles.sumary} numberOfLines={1}>Bến đầu: Ngã ba Vũng Tàu</Text>
-                        <Text style={styles.sumary} numberOfLines={1}>Bến cuối: Chợ bến Thành</Text>
-                        <Text style={styles.sumary} numberOfLines={1}>Thời gian bắt đầu: 5h30</Text>
-                        <Text style={styles.sumary} numberOfLines={1}>Thời gian kết thúc: 20h30</Text>
+                        <Text style={styles.title} numberOfLines={1}>Số xe: {this.props.name}</Text>
+                        <Text style={styles.sumary} numberOfLines={1}>Bến đầu: {this.props.beginStation}</Text>
+                        <Text style={styles.sumary} numberOfLines={1}>Bến cuối: {this.props.endStation}</Text>
+                        <Text style={styles.sumary} numberOfLines={1}>Thời gian hoạt động: {this.props.runTime}</Text>
+                        <Text style={styles.sumary} numberOfLines={1}>Loại hình hoạt động: {this.props.typeBus}</Text>
                     </View>
                 </View>   
             </TouchableOpacity>

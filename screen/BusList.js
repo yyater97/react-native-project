@@ -59,7 +59,7 @@ export default class BusList extends Component {
               return(
                   <BusItem
                       routeName={"150"}
-                      startStation={"Ngã ba vũng tàu"}
+                      startStation={this.props.screenProps.dataRoute}
                       endStation={"Chợ Bến Thành"}
                       gotoBusInfoDetail={
                           () => {

@@ -48,7 +48,7 @@ class AddBusInfoScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
-            <Text style={styles.title}>THÔNG TIN CÁC TUYẾN XE</Text>
+            <Text style={styles.title}>CÁC THÔNG TIN VỀ TUYẾN XE</Text>
         </View>
         <View style={styles.formContainer}>
             <ScrollView style={{flex: 1}}>
@@ -151,7 +151,9 @@ class AddBusInfoScreen extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.BtnContainer}>
-            <TouchableOpacity style={[styles.Btn,styles.cancelBtn]} onPress={this.addBusInfo}>
+            <TouchableOpacity style={[styles.Btn,styles.cancelBtn]} onPress={
+                    () => {this.props.navigation.navigate("Map",null)}
+                }>
               <Text style={styles.BtnText}>Hủy</Text>
             </TouchableOpacity>
           </View>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ActivityIndicator, View, TextInput, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import BusInfoItem from './BusInfoItem';
+import {firebaseApp} from './FirebaseConfig';
 
 export default class BusInfoScreen extends Component {
   constructor(props) {
@@ -8,34 +9,46 @@ export default class BusInfoScreen extends Component {
     this.state = {
       data: [],
       page: 1,
-      txtSearch: 'marvel',
+      txtSearch: '',
       loading: false,
     };
+
+    this.itemRef = firebaseApp.database();
   }
 
   static navigationOptions = {
     header: null
   }
 
-  componentWillMount() {
-    this.fetchData();
-  }
+  listenForItems = () => {
+    this.itemRef.ref('BusInfo').once('value').then((snapshot) => {
+      console.log('snap: '+snapshot.val());
+      var items = [];
+      snapshot.forEach((child) => {
+        items.push({
+            name: child.val().name,
+            beginStation: child.val().beginStation,
+            endStation: child.val().endStation,
+            goRoute: child.val().goRoute,
+            backRoute: child.val().backRoute,
+            typeBus: child.val().typeBus,
+            distance: child.val().distance,
+            numberOfRoute: child.val().numberOfRoute,
+            routeTime: child.val().routeTime,
+            halfTime: child.val().halfTime,
+            runTime: child.val().runTime,
+            seat: child.val().seat,
+          });
+        });
+      this.setState({ data: items});
+      console.log('data: '+this.state.data);
+  });  
+}
 
   shouldComponentUpdate(nextProps, nextState){
     if(nextState.page!=this.state.page)
       return false
     return true;
-  }
-
-  fetchData = async () => {
-    this.setState({loading: true});
-    const url = `https://api.themoviedb.org/3/search/movie?api_key=751317cfe4fa2e7948560b4fb888277f&query=${this.state.txtSearch}&page=${this.state.page}`;
-    const response = await fetch(url);
-    const json = await response.json();
-    this.setState(state => ({
-      data: [...state.data, ...json.results], 
-      loading: false
-    }));
   }
 
   handleEnd = () => {
@@ -55,11 +68,14 @@ export default class BusInfoScreen extends Component {
           ListFooterComponent={()=>
             this.state.loading ? null : <ActivityIndicator size='large' animating/>}
           renderItem = {({item, index})=>{
+              console.log(item);
               return(
                   <BusInfoItem
-                      title={item.title} 
-                      poster={`http://image.tmdb.org/t/p/w185/${item.poster_path}`}
-                      overview={item.overview}
+                      name={item.name} 
+                      beginStation={item.beginStation}
+                      endStation={item.endStation}
+                      runTime={item.runTime}
+                      typeBus={item.typeBus}
                       gotoDetailScreen={
                           ()=>{
                             this.props.navigation.navigate('BusInfoDetailScreen', {item: item});
@@ -71,7 +87,13 @@ export default class BusInfoScreen extends Component {
         />
         <View style={styles.searchBarContainer}>
           <View style={styles.searchBar}>
-            <TextInput style={styles.txtSearch} onChangeText={(text) => {this.setState({txtSearch: text})}} value={this.state.txtSearch}/>
+            <TextInput style={styles.txtSearch} onChangeText={
+                (text) => {
+                  this.setState({txtSearch: text})
+                }
+              }
+              placeholder="Nhập tuyến xe bus muốn tìm"
+            />
             <TouchableOpacity style={styles.searchBtn} onPress={this.fetchData}>
               <Image style={styles.searchIcon} source={require('../img/magnifying-glass.png')} resizeMode="contain"></Image>
             </TouchableOpacity>
@@ -79,6 +101,10 @@ export default class BusInfoScreen extends Component {
         </View>
       </View>
     );
+  }
+
+  componentDidMount() {
+    this.listenForItems();
   }
 }
 

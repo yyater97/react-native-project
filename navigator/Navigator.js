@@ -7,6 +7,7 @@ import Panorama from '../screen/PanoramaScreen';
 import BusList from '../screen/BusList';
 import BusInfoDetailScreen from '../screen/BusInfoDetailScreen';
 import AddBusInfoScreen from '../screen/AddBusInfoScreen';
+import AddMarkerScreen from '../screen/AddMarkerScreen';
 import {createDrawerNavigator, createStackNavigator, createBottomTabNavigator, createAppContainer, createSwitchNavigator} from 'react-navigation';
 
 
@@ -73,8 +74,9 @@ const DrawerNavigator = createDrawerNavigator({
     Login: Login_SignupStackNavigator,
     BusInfo: BusInfoScreen_BusInfoDetailScreenStackNav,
     AddBusInfoData: {screen: AddBusInfoScreen},
+    AddMarkerData: {screen: AddMarkerScreen},
     },{
-        initialRouteName: 'AddBusInfoData',
+        initialRouteName: 'Map',
 });
 
 export const RootNav = createAppContainer(DrawerNavigator);
