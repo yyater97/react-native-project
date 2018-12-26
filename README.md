@@ -1,4 +1,4 @@
-# react-native-project (Ứng dụng tìm kiếm trạm và các tuyến xe bus)
+# react-native-project
 
 Ứng dụng react native giành cho những người muốn tìm kiếm thông tin về xe bus và lịch trình của những xe đó, mỗi trạm có bao nhiêu xe bus đi qua
 
