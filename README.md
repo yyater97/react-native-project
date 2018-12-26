@@ -12,18 +12,18 @@
 
 ## Nội dung
 
-###Đăng ký
+### Đăng ký
 
 <p align="center">
    <img src="screenshots/signup.png" height = "480" width="270">
 </p>
 
-###Đăng nhập
+### Đăng nhập
 <p align="center">
     <img src="screenshots/login.png" height = "480" width="270">
 </p>
 
-###Xem các điểm, trạm dừng xe bus
+### Xem các điểm, trạm dừng xe bus
 
 * Tìm kiếm địa điểm, trạm dừng xe bus
 * Xem thông tin trạm dừng (tên, miêu tả)
@@ -34,7 +34,7 @@
     <img src="screenshots/marker1.png" height = "480" width="270">   <img src="screenshots/marker1.png" height = "480" width="270">   <img src="screenshots/marker3.png" height = "480" width="270">
 </p>
 
-###Danh sách các tuyến xe bus đang hoạt động
+### Danh sách các tuyến xe bus đang hoạt động
 
 * Xem danh sách các tuyến xe bus đang hoạt động trên địa bàn thành phố Hồ Chí Minh
 * Xem chi tiết thông tin về các tuyến xe bus ấy
@@ -43,7 +43,7 @@
     <img src="screenshots/list1.png" height = "480" width="270">   <img src="screenshots/list2.png" height = "480" width="270">
 </p>
 
-###Thêm thông tin
+### Thêm thông tin
 
 * Người dùng đóng góp thông tin các tuyến xe và các trạm xe bus cho cơ sở dữ liệu realtime của firebase
 
