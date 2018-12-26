@@ -68,7 +68,7 @@
 * react-native-google-places-autocomplete - https://github.com/FaridSafi/react-native-google-places-autocomplete
 
 
-## Tác giả
+## Nhóm thực hiện
 
 Trần Hưng Quang - 15520693@gm.uit.edu.vn
 
