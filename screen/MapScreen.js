@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import {Animated, Text, StyleSheet, Dimensions, View, TouchableOpacity, Image, TextInput} from 'react-native';
+import {Animated, StyleSheet, Dimensions, View, TouchableOpacity, Image, TextInput} from 'react-native';
 import MapView from 'react-native-maps';
 import * as Animatable from 'react-native-animatable';
 import {Tab} from '../navigator/Navigator';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 var {height, width} = Dimensions.get('window');
 import { firebaseApp } from './FirebaseConfig';
-
-const API_KEY = 'AIzaSyDJvaVGv2F6x6NAVJNliHQba0QYspeJedY';
+import {connect} from 'react-redux';
+import SearchList from './SearchList';
 
 class MapScreen extends Component {
   
@@ -16,13 +15,9 @@ class MapScreen extends Component {
     this.state = {
       txtSearch: '',
       isHiddenBusInfo: false,
-      region: {
-        latitude: 10.8830802,
-        longitude: 106.7808475,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
-      },
+      isHiddenSearchList:  false,
       markers:[],
+      searchList: [],
       dataRoute: '',
       searchContainerFlexValue: 1,
       searchContentFlexValue: 4,
@@ -43,12 +38,11 @@ class MapScreen extends Component {
   }
 
   onRegionChange(region){
-    this.setState({region});
+    this.props.dispatch({type:'CLICKED_SEARCH_ITEM', region: region});
   }
 
   getMarker = () => {
       this.itemRef.ref('Marker').once('value').then((snapshot) => {
-      console.log('snap: '+snapshot.val());
       var items = [];
       snapshot.forEach((child) => {
         items.push({
@@ -56,8 +50,8 @@ class MapScreen extends Component {
             title: child.val().name,
             description: child.val().detail,
             routes: child.val().routes,
-          });
         });
+      });
       this.setState({ markers: items});
     });
   }
@@ -65,14 +59,13 @@ class MapScreen extends Component {
   getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(
        (position) => {
-         this.setState({
-          region: {
+          var region = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
-          }
-         });
+          };
+          this.props.dispatch({type:'CLICKED_SEARCH_ITEM', region: region});
        },
        (error) => alert(JSON.stringify(error)),
        { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 },
@@ -136,10 +129,40 @@ class MapScreen extends Component {
   }
 
   showRoutes = (routes) => {
+    this.props.dispatch({type:'CLICKED', routes: routes});
+  }
+
+  getSearchList = (text) => {
+    var _searchList = [];
+
+    if(text.length==1){
+      this.state.markers.forEach((marker)=>{
+        if(marker.title.toLowerCase().includes(text.toLowerCase())){   
+          _searchList.push(marker);
+        }
+      });
+      this.setState({
+        isHiddenSearchList: true
+      });
+    }
+    else if(text.length>1){
+      if(this.state.searchList.length>0){
+        this.state.searchList.forEach((marker)=>{
+          if(marker.title.toLowerCase().includes(text.toLowerCase())){
+            _searchList.push(marker);
+          }
+        });
+      }
+    }else{
+      this.setState({
+        isHiddenSearchList: false
+      });
+    }
+
     this.setState({
-      dataRoute: routes,
+      txtSearch: text,
+      searchList: _searchList,
     });
-    this.props.navigation.navigate('BusList', {route: this.dataRoute});
   }
   
   render() {
@@ -167,7 +190,7 @@ class MapScreen extends Component {
             followsUserLocation={true}
             showsCompass={false}
             showsPointsOfInterest={false}
-            region={this.state.region}
+            region={this.props.currRegion}
           >
           {this.state.markers.map((marker, i) => (
             <MapView.Marker
@@ -194,6 +217,11 @@ class MapScreen extends Component {
               <Image style={styles.gpsIcon} source={require('../img/gps-fixed-indicator.png')} resizeMode="contain"/>
             </TouchableOpacity>
           </Animated.View>
+          {this.state.isHiddenSearchList &&
+            <View style={styles.searchListContainer}>
+              <SearchList style={styles.searchList} searchList={this.state.searchList}/>
+            </View>
+          }
           {this.state.isHiddenBusInfo &&
             <TouchableOpacity style={styles.upArrow} onPress={this.onPressUpArrow}>
                 <Image style={styles.arrowImg} source={require('../img/up-arrow.png')} resizeMode="contain"/>
@@ -208,86 +236,25 @@ class MapScreen extends Component {
         <Animated.View style={{flex: this.searchContainerFlex}} >
           <Animatable.View animation="slideInUp" iterationCount={1} style={styles.searchBarContainer}>
             <View style={styles.searchBar}>
-              <TextInput style={styles.txtSearch} placeholder="Nhập địa điểm muốn tìm" 
+              <TextInput style={styles.txtSearch}
                 onChangeText={
-                    (text) => this.setState({txtSearch: text})
+                  (text) => {
+                    this.getSearchList(text);
                   }
+                }
                 placeholder="Nhập địa điểm muốn tìm"
                 />
-              {/* <GooglePlacesAutocomplete
-                placeholder='Search'
-                minLength={2} // minimum length of text to search
-                autoFocus={false}
-                returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                listViewDisplayed='auto'    // true/false/undefined
-                fetchDetails={true}
-                renderDescription={row => row.description} // custom description render
-                onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                  console.log(data, details);
-                }}
-                
-                getDefaultValue={() => ''}
-                
-                query={{
-                  // available options: https://developers.google.com/places/web-service/autocomplete
-                  key: API_KEY,
-                  language: 'vn', // language of the results
-                  types: '(cities)' // default: 'geocode'
-                }}
-                
-                styles={{
-                  textInputContainer: {
-                    backgroundColor: 'rgba(0,0,0,0)',
-                    borderTopWidth: 0,
-                    borderBottomWidth:0,
-                  },
-                  description: {
-                    fontWeight: 'bold',
-                  },
-                  textInput: {
-                    marginLeft: 22,
-                    marginRight: 0,
-                    height: 38,
-                    color: '#5d5d5d',
-                    fontSize: 16,
-                  },
-                  predefinedPlacesDescription: {
-                    color: '#1faadb'
-                  }
-                }}
-                
-                currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
-                currentLocationLabel="Current location"
-                nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                GoogleReverseGeocodingQuery={{
-                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                }}
-                GooglePlacesSearchQuery={{
-                  // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                  rankby: 'distance',
-                  types: 'food'
-                }}
-
-                filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-              /> */}
               <TouchableOpacity style={styles.searchBtn}>
                 <Image style={styles.searchIcon} source={require('../img/magnifying-glass.png')} resizeMode="contain"></Image>
               </TouchableOpacity>
             </View>
           </Animatable.View>
           <Animated.View style={{flex: this.state.searchContentFlexValue}}>
-              {this.state.isHiddenBusInfo && <Tab screenProps={this.state.dataRoute}/>}
-            {/* {this.state.isHiddenBusInfo && <BusList navigation = {this.props.navigation}/>}
-            {this.state.isHiddenBusInfo && <Panorama/>} */}
+              {this.state.isHiddenBusInfo && <Tab/>}
           </Animated.View>
         </Animated.View>
       </View>
     );
-  }
-
-  changeTxtSearch(text){
-    this.setState(text);
   }
 }
 
@@ -356,6 +323,22 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined,
   },
+  searchListContainer:{
+    height: '20%',
+    width: '90%',
+    position: 'absolute',
+    alignSelf: 'center',
+    bottom: 10,
+    zIndex: 999,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,  
+    elevation: 5,
+  },
+  searchList: {
+    flex: 1,
+  },
   searchBarContainer: {
     flex: 1,
     backgroundColor: 'blue',
@@ -378,6 +361,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 50,
     backgroundColor: '#f1f1f1',
     height: 50,
+    zIndex: 999,
   },
   searchBtn: {
     flex: 1,
@@ -431,4 +415,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MapScreen;
+function mapStateToProps(state){
+  return {currRegion: state.region};
+}
+
+export default connect(mapStateToProps)(MapScreen);

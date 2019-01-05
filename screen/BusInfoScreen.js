@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, View, TextInput, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { ActivityIndicator, View, TextInput, FlatList, StyleSheet, TouchableOpacity, Image, Text} from 'react-native';
 import BusInfoItem from './BusInfoItem';
 import {firebaseApp} from './FirebaseConfig';
 
@@ -8,6 +8,7 @@ export default class BusInfoScreen extends Component {
     super(props);
     this.state = {
       data: [],
+      searchList: [],
       page: 1,
       txtSearch: '',
       loading: false,
@@ -20,12 +21,43 @@ export default class BusInfoScreen extends Component {
     header: null
   }
 
+  getSearchList = (text) => {
+    var _searchList = [];
+    
+    if(text.length==1){
+      this.state.data.forEach((item)=>{
+        if(item.name.toLowerCase().includes(text.toLowerCase())){   
+          _searchList.push(item);
+        }
+      });
+      this.setState({
+        searchList: _searchList
+      });
+    }
+    else if(text.length>1){
+      if(this.state.searchList.length>0){
+        this.state.searchList.forEach((item)=>{
+          if(item.name.toLowerCase().includes(text.toLowerCase())){
+            _searchList.push(item);
+          }
+        });
+      }
+      this.setState({
+        searchList: _searchList
+      });
+    }else{
+      this.setState({
+        searchList: this.state.data
+      });
+    }
+  }
+
   listenForItems = () => {
     this.itemRef.ref('BusInfo').once('value').then((snapshot) => {
-      console.log('snap: '+snapshot.val());
       var items = [];
       snapshot.forEach((child) => {
         items.push({
+            imageUrl: child.val().imageUrl,
             name: child.val().name,
             beginStation: child.val().beginStation,
             endStation: child.val().endStation,
@@ -38,12 +70,11 @@ export default class BusInfoScreen extends Component {
             halfTime: child.val().halfTime,
             runTime: child.val().runTime,
             seat: child.val().seat,
-          });
+          }); 
         });
-      this.setState({ data: items});
-      console.log('data: '+this.state.data);
-  });  
-}
+      this.setState({ data: items, searchList: items});
+    });  
+  }
 
   shouldComponentUpdate(nextProps, nextState){
     if(nextState.page!=this.state.page)
@@ -52,25 +83,24 @@ export default class BusInfoScreen extends Component {
   }
 
   handleEnd = () => {
-    console.log('handler!');
-    console.log('page: '+this.state.page);
     this.setState({ page: this.state.page + 1 }), () => this.getData(this.state.txtSearch, this.state.page);
   };
 
   render() {
     return (
       <View style={styles.container}>
+        <Text style={styles.title}>Các tuyến xe buýt đang hoạt động</Text>
         <FlatList
-          data = {this.state.data}
+          data = {this.state.searchList}
           keyExtractor={(x,i) => i.toString()}
           onEndReached={()=>this.handleEnd()}
           onEndReachedThreshold={0}
-          ListFooterComponent={()=>
-            this.state.loading ? null : <ActivityIndicator size='large' animating/>}
+          // ListFooterComponent={()=>
+          //   this.state.loading ? null : <ActivityIndicator size='large' animating/>}
           renderItem = {({item, index})=>{
-              console.log(item);
               return(
                   <BusInfoItem
+                      imageUrl={item.imageUrl}
                       name={item.name} 
                       beginStation={item.beginStation}
                       endStation={item.endStation}
@@ -88,9 +118,10 @@ export default class BusInfoScreen extends Component {
         <View style={styles.searchBarContainer}>
           <View style={styles.searchBar}>
             <TextInput style={styles.txtSearch} onChangeText={
-                (text) => {
-                  this.setState({txtSearch: text})
-                }
+                (text) => {[
+                  this.setState({txtSearch: text}),
+                  this.getSearchList(text)
+                ]}
               }
               placeholder="Nhập tuyến xe bus muốn tìm"
             />
@@ -113,6 +144,15 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: 'white'
+  },
+  title: {
+    height: 45,
+    width: '100%',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    paddingVertical: 10,
+    textAlign: 'center',
   },
   searchBarContainer: {
     backgroundColor: 'blue',

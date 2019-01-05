@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, View, TextInput, FlatList, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { ActivityIndicator, View, FlatList, StyleSheet} from 'react-native';
 import BusItem from './BusItem';
-import {Stack} from '../navigator/Navigator';
+import { connect } from 'react-redux';
+import {firebaseApp} from './FirebaseConfig';
 
-export default class BusList extends Component {
+
+class BusList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: [],
       page: 1,
-      txtSearch: 'marvel',
       loading: false,
     };
   }
 
   static navigationOptions= ({navigation})=>({
     header: null,
-  })
-
-  componentWillMount() {
-    this.fetchData();
-  }
+  })  
 
   shouldComponentUpdate(nextProps, nextState){
     if(nextState.page!=this.state.page)
@@ -28,39 +25,57 @@ export default class BusList extends Component {
     return true;
   }
 
-  fetchData = async () => {
-    this.setState({loading: true});
-    const url = `https://api.themoviedb.org/3/search/movie?api_key=751317cfe4fa2e7948560b4fb888277f&query=${this.state.txtSearch}&page=${this.state.page}`;
-    const response = await fetch(url);
-    const json = await response.json();
-    this.setState(state => ({
-      data: [...state.data, ...json.results], 
-      loading: false
-    }));
+  getRoutes = () => {
+    var arrRoutes = this.props.busRoutes.split(',');
+    var items=[];
+    console.log('routes: '+arrRoutes[0]);
+    for(var i=0; i<arrRoutes.length; i++){
+      firebaseApp.database().ref('BusInfo/bus'+arrRoutes[i]).once('value').then((snapshot) => {  
+        console.log('snapshot: '+snapshot.val());
+        items.push({
+            name: snapshot.val().name,
+            beginStation: snapshot.val().beginStation,
+            endStation: snapshot.val().endStation,
+            goRoute: snapshot.val().goRoute,
+            backRoute: snapshot.val().backRoute,
+            typeBus: snapshot.val().typeBus,
+            distance: snapshot.val().distance,
+            numberOfRoute: snapshot.val().numberOfRoute,
+            routeTime: snapshot.val().routeTime,
+            halfTime: snapshot.val().halfTime,
+            runTime: snapshot.val().runTime,
+            seat: snapshot.val().seat,
+        });
+      });
+    }
+    this.setState({ data: items});
   }
 
   handleEnd = () => {
     console.log('handler!');
     console.log('page: '+this.state.page);
-    this.setState({ page: this.state.page + 1 }), () => this.getData(this.state.txtSearch, this.state.page);
+    this.setState({ 
+      page: this.state.page + 1 }), 
+      () => this.getData(this.state.txtSearch, this.state.page);
   };
 
   render() {
     return (
       <View style={styles.container}>
         <FlatList
+          style={styles.list}
           data = {this.state.data}
           keyExtractor={(x,i) => i.toString()}
           onEndReached={()=>this.handleEnd()}
           onEndReachedThreshold={0}
-          ListFooterComponent={()=>
-            this.state.loading ? null : <ActivityIndicator size='large' animating/>}
           renderItem = {({item, index})=>{
               return(
                   <BusItem
-                      routeName={"150"}
-                      startStation={this.props.screenProps.dataRoute}
-                      endStation={"Chợ Bến Thành"}
+                      name={item.name} 
+                      beginStation={item.beginStation}
+                      endStation={item.endStation}
+                      runTime={item.runTime}
+                      halfTime={item.halfTime}
                       gotoBusInfoDetail={
                           () => {
                             this.props.navigation.navigate('BusInfoDetail', {item: item});
@@ -73,6 +88,10 @@ export default class BusList extends Component {
       </View>
     );
   }
+
+  componentDidMount = () => {
+    this.getRoutes();
+  }
 }
 
 var styles = StyleSheet.create({
@@ -81,4 +100,13 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white'
   },
+  list: {
+    flex: 1
+  }
 });
+
+function mapStateToProps(state){
+  return {busRoutes: state.routes};
+}
+
+export default connect(mapStateToProps)(BusList);

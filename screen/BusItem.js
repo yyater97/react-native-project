@@ -11,17 +11,17 @@ export default class BusItem extends Component{
             <View style={styles.container}>
                 <View style={styles.imgRouteContainer}>
                     <View style={styles.imgRoute}>
-                        <Text style={styles.routeName}>{this.props.routeName}</Text>
+                        <Text style={styles.routeName}>{this.props.name}</Text>
                     </View>
                 </View>
                 <View style={styles.txtContainer}>
                     <View style={styles.content}>
                         <View style={styles.stationInfo}>
-                            <Text style={styles.stationText} numberOfLines={1}>Bến đầu: Ngã ba Vũng Tàu</Text>
-                            <Text style={styles.stationText} numberOfLines={1}>Bến cuối: Chợ bến Thành</Text>
+                            <Text style={styles.stationText} numberOfLines={1}>Bến đầu: {this.props.beginStation}</Text>
+                            <Text style={styles.stationText} numberOfLines={1}>Bến cuối: {this.props.endStation}</Text>
                         </View>
-                        <Text style={styles.time} numberOfLines={1}>Thời gian bắt đầu: 5h30</Text>
-                        <Text style={styles.time} numberOfLines={1}>Thời gian kết thúc: 20h30</Text>
+                        <Text style={styles.time} numberOfLines={1}>Thời gian hoạt động: {this.props.runTime}</Text>
+                        <Text style={styles.time} numberOfLines={1}>Giãn cách: {this.props.halfTime}</Text>
                     </View>
                 </View>
                 <View style={styles.nextBtnContainer}>
@@ -42,8 +42,8 @@ var styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: 'white',
         flexDirection: 'row',
-        margin: 10,
-        marginBottom: 0,
+        marginVertical: 5,
+        marginHorizontal: 10,
         padding: 10,
         paddingHorizontal: 0,
         height: 100,

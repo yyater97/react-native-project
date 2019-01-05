@@ -66,15 +66,38 @@ const Login_SignupStackNavigator = createStackNavigator({
 
 const BusInfoScreen_BusInfoDetailScreenStackNav = createStackNavigator({
     BusInfoScreen: {screen: BusInfoScreen},
-    BusInfoDetailScreen: {screen: BusInfoDetailScreen},
+    BusInfoDetailScreen: {
+        screen: BusInfoDetailScreen,
+
+    },
 });
 
 const DrawerNavigator = createDrawerNavigator({
-    Map: {screen: MapScreen},
-    Login: Login_SignupStackNavigator,
-    BusInfo: BusInfoScreen_BusInfoDetailScreenStackNav,
-    AddBusInfoData: {screen: AddBusInfoScreen},
-    AddMarkerData: {screen: AddMarkerScreen},
+    Map: {screen: MapScreen,
+        navigationOptions: {
+            title: 'Bảng đồ trạm xe buýt'
+        }
+    },
+    Login: {screen: Login_SignupStackNavigator,
+        navigationOptions: {
+            title: 'Đăng nhập'
+        }
+    },
+    BusInfo: {screen: BusInfoScreen_BusInfoDetailScreenStackNav,
+        navigationOptions: {
+            title: 'Danh sách các tuyến xe buýt'
+        }
+    },
+    AddBusInfoData: {screen: AddBusInfoScreen,
+        navigationOptions: {
+            title: 'Thêm thông tin tuyến'
+        }
+    },
+    AddMarkerData: {screen: AddMarkerScreen,
+        navigationOptions: {
+            title: 'Thêm thông tin trạm'
+        }
+    },
     },{
         initialRouteName: 'Map',
 });

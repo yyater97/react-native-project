@@ -10,9 +10,9 @@ export default class BusInfoDetail extends Component {
     }
 
     static navigationOptions = {
-        title: 'Tuyến xe bus 150',
+        title: 'Thông tin tuyến xe bus',
         headerStyle: {
-            backgroundColor: '#f4511e',
+            backgroundColor: '#fca504',
             height: 50,
         },
         headerTitleStyle: {
@@ -39,19 +39,17 @@ export default class BusInfoDetail extends Component {
                 </View>
                 <View style={styles.infoContainer}>
                     <Text style={styles.title}>THÔNG TIN CƠ BẢN VỀ TUYẾN</Text>
-                    <Text style={styles.text} >Bến đầu: Ngã ba Vũng Tàu</Text>
-                    <Text style={styles.text} >Bến cuối: Chợ bến Thành</Text>
-                    <Text style={styles.text} >Lượt đi : Ga Chợ Lớn (Bến A)-Lê Quang Sung-Phạm Đình Hổ-Tháp Mười-Ngô Nhân Tịnh-Phú Hữu-Hồng Bàng-An Dương Vương-Nguyễn Tri Phương-Ngô Gia Tự-Điện Biên Phủ-Xa lộ Hà Nội-Quốc lộ 52-Ngã ba Tân Vạn- Ngã 4 Vũng Tàu - Bến xe Ngã 4 Vũng Tàu 9 - Ngã 3 Tân Vạn</Text>
-                    <Text style={styles.text} >Lượt về : Ngã ba Tân Vạn-Quốc lộ 52-Xa lộ Hà Nội-Điện Biên Phủ-Nguyễn Bỉnh Khiêm-Nguyễn Đình Chiểu-Lý Thái Tổ-Ngô Gia Tự-Hồng Bàng-Phú Hữu-Ga Chợ Lớn Bến A</Text>
-                    <Text style={styles.text} >Loại hình hoạt động: Buýt có trợ giá</Text>
-                    <Text style={styles.text} >Cự ly: 28,75 km</Text>
-                    <Text style={styles.text} >Số chuyến: 370 chuyến/ngày</Text>
-                    <Text style={styles.text} >Thời gian chuyến: 80 phút</Text>
-                    <Text style={styles.text} >Giãn cách: 4 - 12 phút/chuyến</Text>
-                    <Text style={styles.text} >Thời gian hoạt động:</Text>
-                    <Text style={styles.text} >BX Chợ Lớn: 04h30 - 20h45</Text>
-                    <Text style={styles.text} >Ngã 3 Tân Vạn: 04h30 - 20h30</Text>
-                    <Text style={styles.text} >Loại xe: 80 chỗ</Text>
+                    <Text style={styles.text} >Bến đầu: {this.props.navigation.state.params.item.beginStation}</Text>
+                    <Text style={styles.text} >Bến cuối: {this.props.navigation.state.params.item.endStation}</Text>
+                    <Text style={styles.text} >Lượt đi : {this.props.navigation.state.params.item.goRoute}</Text>
+                    <Text style={styles.text} >Lượt về : {this.props.navigation.state.params.item.backRoute}</Text>
+                    <Text style={styles.text} >Loại hình hoạt động: {this.props.navigation.state.params.item.typeBus}</Text>
+                    <Text style={styles.text} >Cự ly: {this.props.navigation.state.params.item.distance}</Text>
+                    <Text style={styles.text} >Số chuyến: {this.props.navigation.state.params.item.numberOfRoute}</Text>
+                    <Text style={styles.text} >Thời gian chuyến: {this.props.navigation.state.params.item.routeTime}</Text>
+                    <Text style={styles.text} >Giãn cách: {this.props.navigation.state.params.item.halfTime}</Text>
+                    <Text style={styles.text} >Thời gian hoạt động: {this.props.navigation.state.params.item.runTime}</Text>
+                    <Text style={styles.text} >Loại xe: {this.props.navigation.state.params.item.seat}</Text>
                 </View>
             </ScrollView>
         )

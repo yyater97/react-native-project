@@ -10,7 +10,7 @@ export default class BusInfoItem extends Component{
         return(
             <TouchableOpacity style={styles.container} onPress={this.props.gotoDetailScreen}>
                 <View style={styles.imgContainer}>
-                    <Image style={styles.image} source={{uri:this.props.poster}} resizeMode="contain"/>
+                    <Image style={styles.image} source={{uri:this.props.imageUrl}} resizeMode="contain"/>
                 </View>
                 <View style={styles.txtContainer}>
                     <View style={styles.content}>
@@ -47,7 +47,8 @@ var styles = StyleSheet.create({
     imgContainer: {
         flex: 2,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding: 5,
     },
     image: {
         flex: 1,

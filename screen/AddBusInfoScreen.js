@@ -6,6 +6,7 @@ class AddBusInfoScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        imageUrl: '',
         name: '',
         beginStation: '',
         endStation: '',
@@ -17,7 +18,7 @@ class AddBusInfoScreen extends Component {
         routeTime: '',
         halfTime: '',
         runTime: '',
-        seat: '',
+        seat: ''
     };
 
   }
@@ -29,6 +30,7 @@ class AddBusInfoScreen extends Component {
   addBusInfo = () =>{
     var id = 'bus'+this.state.name;
     firebaseApp.database().ref('BusInfo/' + id).set({
+        imageUrl: this.state.imageUrl,
         name: this.state.name,
         beginStation: this.state.beginStation,
         endStation: this.state.endStation,
@@ -58,6 +60,13 @@ class AddBusInfoScreen extends Component {
                         (text) => this.setState({name: text})
                     } 
                     placeholder="Nhập tên tuyến"/>
+                </View>
+                <View style={styles.formEle}>
+                    <Text style={styles.label}>Link ảnh đại diện:</Text>
+                    <TextInput style={styles.input} onChangeText={
+                        (text) => this.setState({imageUrl: text})
+                    } 
+                    placeholder="Nhập link ảnh đại diện"/>
                 </View>
                 <View style={styles.formEle}>
                     <Text style={styles.label}>Bến đầu:</Text>

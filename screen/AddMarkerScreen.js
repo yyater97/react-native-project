@@ -6,6 +6,7 @@ class AddMarkerScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        id: '',
         name: '',
         detail: '',
         latitude: 10.8830802,
@@ -21,6 +22,7 @@ class AddMarkerScreen extends Component {
 
   addMarker = () =>{
     firebaseApp.database().ref('Marker/').push({
+        id: this.state.id,
         name: this.state.name,
         detail: this.state.detail,
         latitude: this.state.latitude,
@@ -37,6 +39,13 @@ class AddMarkerScreen extends Component {
         </View>
         <View style={styles.formContainer}>
             <ScrollView style={{flex: 1}}>
+                <View style={styles.formEle}>
+                    <Text style={styles.label}>Mã trạm:</Text>
+                    <TextInput style={styles.input} onChangeText={
+                        (text) => this.setState({id: text})
+                    } 
+                    placeholder="Nhập mã trạm"/>
+                </View>
                 <View style={styles.formEle}>
                     <Text style={styles.label}>Tên trạm:</Text>
                     <TextInput style={styles.input} onChangeText={
