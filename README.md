@@ -31,15 +31,11 @@
 * Xem thông tin chi tiết tuyến xe bus đó
 
 <p align="center">
-    <img src="screenshots/marker1.png" height = "480" width="270">   <img src="screenshots/marker2.png" height = "480" width="270">   <img src="screenshots/marker3.png" height = "480" width="270">
+    <img src="screenshots/marker2.png" height = "480" width="270">   <img src="screenshots/marker3.png" height = "480" width="270">   <img src="screenshots/marker4.png" height = "480" width="270">
 </p>
 
 <p align="center">
-    <img src="screenshots/marker4.png" height = "480" width="270">   <img src="screenshots/marker5.png" height = "480" width="270">   <img src="screenshots/marker6.png" height = "480" width="270">
-</p>
-
-<p align="left">
-    <img src="screenshots/marker7.png" height = "480" width="270">
+    <img src="screenshots/marker5.png" height = "480" width="270">   <img src="screenshots/marker6.png" height = "480" width="270">   <img src="screenshots/marker7.png" height = "480" width="270">
 </p>
 
 ### Danh sách các tuyến xe bus đang hoạt động
@@ -86,8 +82,8 @@
 
 ## Nhóm thực hiện
 
-Trần Hưng Quang - 15520693@gm.uit.edu.vn
-
-Phạm Ngọc Quân - 15520680@gm.uit.edu.vn
-
-Dương Văn Thanh - 15520801@gm.uit.edu.vn
+| Tên thành viên        | Email                     |
+| ----------------------|:-------------------------:|
+| Trần Hưng Quang       | 15520693@gm.uit.edu.vn    |
+| Phạm Ngọc Quân        | 15520680@gm.uit.edu.vn    |
+| Dương Văn Thanh       | 15520801@gm.uit.edu.vn    |
