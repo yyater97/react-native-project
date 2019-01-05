@@ -6,8 +6,8 @@
 
 1. Chức năng đăng nhập
 2. Chức năng đăng ký
-3. Chức năng xem các trạm xe bus, các tuyến xe bus qua các trạm đó và thông tin chi tiết của chúng
-4. Xem danh sách các tuyến xe bus hiện đang hoạt động và chi tiết
+3. Chức năng và tìm kiếm xem các trạm xe bus, các tuyến xe bus qua các trạm đó và thông tin chi tiết của chúng
+4. Xem và tìm kiếm danh sách các tuyến xe bus hiện đang hoạt động và chi tiết
 5. Thêm thông tin trạm xe bus và thông tin các tuyến xe
 
 ## Nội dung
@@ -31,16 +31,30 @@
 * Xem thông tin chi tiết tuyến xe bus đó
 
 <p align="center">
-    <img src="screenshots/marker1.png" height = "480" width="270">   <img src="screenshots/marker1.png" height = "480" width="270">   <img src="screenshots/marker3.png" height = "480" width="270">
+    <img src="screenshots/marker1.png" height = "480" width="270">   <img src="screenshots/marker2.png" height = "480" width="270">   <img src="screenshots/marker3.png" height = "480" width="270">
+</p>
+
+<p align="center">
+    <img src="screenshots/marker4.png" height = "480" width="270">   <img src="screenshots/marker5.png" height = "480" width="270">   <img src="screenshots/marker6.png" height = "480" width="270">
+</p>
+
+<p align="left">
+    <img src="screenshots/marker7.png" height = "480" width="270">
 </p>
 
 ### Danh sách các tuyến xe bus đang hoạt động
 
 * Xem danh sách các tuyến xe bus đang hoạt động trên địa bàn thành phố Hồ Chí Minh
-* Xem chi tiết thông tin về các tuyến xe bus ấy
+* Xem chi tiết thông tin về các tuyến xe bus ấy (một số hình ảnh minh họa, thông tin chi tiết, tuyến đường đi của chúng trên bảng đồ)
+* Tìm kiếm tuyến xe bus bạn muốn xem
 
 <p align="center">
-    <img src="screenshots/list1.png" height = "480" width="270">   <img src="screenshots/list2.png" height = "480" width="270">
+    <img src="screenshots/list1.png" height = "480" width="270">   <img src="screenshots/list2.png" height = "480" width="270"> 
+    <img src="screenshots/list3.png" height = "480" width="270">
+</p>
+
+<p align="center">
+    <img src="screenshots/list4.png" height = "480" width="270">   <img src="screenshots/list5.png" height = "480" width="270"> 
 </p>
 
 ### Thêm thông tin
@@ -65,7 +79,9 @@
 
 * react-native-maps - https://github.com/react-native-community/react-native-maps
 
-* react-native-google-places-autocomplete - https://github.com/FaridSafi/react-native-google-places-autocomplete
+* redux - https://redux.js.org/
+
+* react-redux - https://github.com/reduxjs/react-redux
 
 
 ## Nhóm thực hiện
